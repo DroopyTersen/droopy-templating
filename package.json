@@ -1,0 +1,23 @@
+{
+  "name": "droopy-templating",
+  "version": "1.0.1",
+  "description": "Lightweight templating engine",
+  "main": "droopy-templating.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/droopytersen/droopy-templating"
+  },
+  "keywords": [
+    "templating",
+    "droopy"
+  ],
+  "author": "Andrew Petersen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/droopytersen/droopy-templating/issues"
+  },
+  "homepage": "https://github.com/droopytersen/droopy-templating"
+}
