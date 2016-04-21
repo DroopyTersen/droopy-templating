@@ -1,6 +1,6 @@
 {
   "name": "droopy-templating",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Lightweight templating engine",
   "main": "droopy-templating.js",
   "scripts": {
@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/droopytersen/droopy-templating/issues"
   },
-  "homepage": "https://github.com/droopytersen/droopy-templating"
+  "homepage": "https://github.com/droopytersen/droopy-templating",
+  "dependencies": {
+    "cheerio": "^0.20.0"
+  }
 }
