@@ -1,3 +1,5 @@
+var cheerio = require("cheerio");
+
 var templating = {
 
 	Placeholder: function(raw) {
@@ -51,35 +53,32 @@ templating.Each = {
 
 	regExp: /\{\[[^\]]+\]\}?/g,
 
-	populateEachTemplates: function(itemHtml, item) {
-		var $itemHtml = $(itemHtml),
-			eachTemplates = $itemHtml.find("[data-each]");
+	populateEachTemplates: function(templateHtml, item) {
+		var $ = cheerio.load(templateHtml);
+		var $eachTemplates = $("[data-each]");
 
-		eachTemplates.each(function() {
-			var arrayHtml = "",
-				itemTemplate = $(this).html(),
-				arrayProp = $(this).data("each"),
-				array = sp.templating.getObjectValue(item, arrayProp);
+		$eachTemplates.each(function() {
+			var arrayHtml = "";
+			var $this = $(this);
+			var itemTemplate = $this.html();
+			var arrayProp = $this.data("each");
+			var array = templating.getObjectValue(item, arrayProp);
 
-			if (array != null && $.isArray(array)) {
+			if (array && Array.isArray(array)) {
 				for (var i = 0; i < array.length; i++) {
 					arrayHtml += templating.populateTemplate(itemTemplate, array[i], templating.Each.regExp);
 				}
 			}
 
-			$itemHtml.find($(this)).html(arrayHtml);
+			$($this).html(arrayHtml);
 		});
-
-		var temp = $itemHtml.clone().wrap("<div>");
-		return temp.parent().html();
+		return $.html();
 	}
 };
 
 templating.renderTemplate = function(template, item, renderEachTemplate) {
 	var itemHtml = templating.populateTemplate(template, item);
-	if (renderEachTemplate) {
-		itemHtml = templating.Each.populateEachTemplates(itemHtml, item);
-	}
+	itemHtml = templating.Each.populateEachTemplates(itemHtml, item);
 	return itemHtml;
 };
 
