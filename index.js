@@ -49,6 +49,26 @@ var templating = {
 	}
 };
 
+templating.If = {
+	removeFalsies: function(templateHtml, scope) {
+		var $ = cheerio.load(templateHtml);
+		
+		var $ifTemplates = $("[data-if]")
+		$ifTemplates.each(function(){
+			var $this = $(this);
+			var value = templating.getObjectValue(scope, $this.data("if"))
+			if (!value) $this.remove();
+		})
+
+		var $notTemplates = $("[data-if-not]")
+		$notTemplates.each(function(){
+			var $this = $(this);
+			var value = templating.getObjectValue(scope, $this.data("if-not"))
+			if (value) $this.remove();
+		})
+		return $.html();
+	}
+}
 templating.Each = {
 
 	regExp: /\{\[[^\]]+\]\}?/g,
@@ -77,6 +97,7 @@ templating.Each = {
 };
 
 templating.renderTemplate = function(template, item, renderEachTemplate) {
+	template = templating.If.removeFalsies(template, item);
 	var itemHtml = templating.populateTemplate(template, item);
 	itemHtml = templating.Each.populateEachTemplates(itemHtml, item);
 	return itemHtml;

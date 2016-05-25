@@ -66,3 +66,50 @@ describe("data-each repeater", function() {
 		html.should.equal(expected);
 	})
 })
+
+describe("data-if condition", function() {
+	var model4 = {
+		name: model2.name,
+		nested: {
+			shouldShow: false
+		}
+	};
+	var ifTemplate = '<h1>{{name.first}}<span data-if="nested.shouldShow">{{name.last}}</span></h1>';
+	it("should remove an element and all child elements if the value resolves truthy", function() {
+		expected = "<h1>Andrew</h1>";
+		var html = templating.renderTemplate(ifTemplate, model4);
+		html.should.equal(expected);
+	})
+	it("should leave an element and all child elements if the value resolves truthy", function() {
+		model4.nested.shouldShow = true;
+		expected = '<h1>Andrew<span data-if="nested.shouldShow">Petersen</span></h1>';
+		var html = templating.renderTemplate(ifTemplate, model4);
+		html.should.equal(expected);
+	})
+
+	var ifTemplateInvalid = '<h1>{{name.first}}<span data-if="NOT_A_PROP">{{name.last}}</span></h1>';
+	it("should remove an element if an invalid scope property is given", function() {
+		expected = "<h1>Andrew</h1>";
+		var html = templating.renderTemplate(ifTemplateInvalid, model4);
+		html.should.equal(expected);
+	})
+});
+
+describe("data-if-not condition", function() {
+	var model5 = {
+		loggedIn: false,
+		name: model2.name
+	};
+	var template = '<span data-if-not="loggedIn">Sign In</span><span data-if="loggedIn">{{name.first}}</span>'
+	it("should keep an element and its children if value resolves falsy", function() {
+		expected = '<span data-if-not="loggedIn">Sign In</span>';
+		var html = templating.renderTemplate(template, model5);
+		html.should.equal(expected);
+	})
+	it("should remove an element and its children if value resolves truthy", function() {
+		model5.loggedIn = true;
+		expected = '<span data-if="loggedIn">Andrew</span>';
+		var html = templating.renderTemplate(template, model5);
+		html.should.equal(expected);
+	})
+})
